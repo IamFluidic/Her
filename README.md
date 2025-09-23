@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Love Website
 A romantic React application with interactive challenges leading to a heartfelt proposal.
 Getting Started
