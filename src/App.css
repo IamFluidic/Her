@@ -1,0 +1,456 @@
+/* ---------- General styles ---------- */
+.App {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom, #ffe6e6, #ffcccc);
+  min-height: 100vh;
+  padding: 50px;
+  position: relative;
+  padding-bottom: 220px; /* space for sticky containers */
+}
+
+/* ---------- Buttons ---------- */
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  background-color: #ff6699;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff3366;
+  transform: scale(1.1) rotate(-3deg);
+}
+
+/* ---------- Fade animation ---------- */
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Layout / sections ---------- */
+.step {
+  margin-top: 40px;
+}
+
+.candidates {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* ---------- Avatars ---------- */
+.avatar {
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.2) rotate(-10deg);
+}
+
+/* ---------- Heart GIF ---------- */
+.heart-gif {
+  width: 150px;
+  margin-top: 20px;
+  animation: bounce 1s infinite alternate;
+}
+
+/* ---------- Bounce animation ---------- */
+@keyframes bounce {
+  to {
+    transform: translateY(-20px);
+  }
+}
+
+/* ---------- Full-screen GIF (below overlay, non-interactive) ---------- */
+.full-screen-gif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 900;             /* below overlay */
+  pointer-events: none;     /* allow clicks to pass through to overlay */
+}
+
+/* ---------- Candidate button ---------- */
+.candidate-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #f43f5e;
+  background: rgba(255, 241, 242, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.candidate-button:hover {
+  transform: scale(1.05);
+  background-color: #f43f5e;
+  border-color: #e11d48;
+}
+
+.candidate-button p {
+  margin: 5px 0 0;
+  font-size: 16px;
+  color: #e11d48;
+}
+
+.candidate-button:hover p {
+  color: white;
+}
+
+/* ---------- Love Note Container (modal base) ---------- */
+/* keep this for semantic usage; dialog-content composes it */
+.love-note-container {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: 500px;
+  margin: 20px auto;
+  position: relative;
+  /* background: rgba(172, 37, 64, 0.9);  */
+}
+
+/* ---------- Time container (sticky) ---------- */
+.time-container {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: 500px;
+  margin: 0 auto;
+  position: sticky;
+  bottom: 80px;      /* leave room above bottom spotify if present */
+  z-index: 1001;     /* below modal overlay */
+  margin-bottom: 40px;
+}
+
+/* ---------- Spotify container (sticky) ---------- */
+.spotify-container {
+  padding: 20px;
+  border-radius: 16px;
+  margin-top: 20px;
+  max-width: 500px;
+  margin: 20px auto 0 auto;
+  position: relative;
+  bottom: 20px;      /* visible at bottom of viewport */
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  z-index: 1002;     /* still below modal overlay */
+}
+
+/* Spotify player framing */
+.spotify-player {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.spotify-player iframe {
+  width: 100%;
+  height: 380px; /* default height for desktop */
+  border: none;
+  border-radius: 12px;
+}
+
+.spotify-player h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #e11d48;
+}
+
+/* ---------- Dialog (modal) styles ---------- */
+/* overlay that dims the page and blocks interactions */
+.dialog-overlay {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;   /* VERY high so it always sits above sticky stuff */
+  padding: 20px;    /* small room on mobile */
+  pointer-events: auto;
+}
+
+/* the modal panel itself */
+.dialog-content {
+  background: #fff1f2;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(244, 63, 94, 0.4);
+  position: relative;
+  z-index: 10001;   /* ensure it's above the overlay (for stacking contexts) */
+  transform: translateY(8px);
+  transition: transform 180ms ease, opacity 180ms ease;
+  opacity: 1;
+  outline: none;
+}
+
+/* dialog content text styling */
+.dialog-content p {
+  font-size: 18px;
+  color: #e11d48;
+  margin-bottom: 20px;
+}
+
+/* dialog buttons */
+.dialog-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #f43f5e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.12s ease;
+}
+
+.dialog-content button:hover {
+  background: #e11d48;
+  transform: translateY(-2px);
+}
+
+/* close button (circular top-right) */
+.dialog-content .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: linear-gradient(90deg,#ff6a8a,#ff4d7a);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* make sure textareas inside modal expand nicely */
+.dialog-content textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+  resize: vertical;
+  min-height: 120px;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 600px) {
+  .time-container,
+  .spotify-container,
+  .spotify-player {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .spotify-player iframe {
+    height: 300px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .dialog-content {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .dialog-content h2 {
+    font-size: 18px;
+  }
+}
+
+/* .App {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom, #ffe6e6, #ffcccc);
+  min-height: 100vh;
+  padding: 50px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  background-color: #ff6699;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff3366;
+  transform: scale(1.1) rotate(-3deg);
+}
+
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+  opacity: 0;
+}
+.love-note-container {
+  background: rgba(172, 37, 64, 0.9);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: 500px;
+  margin: 20px auto;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.step {
+  margin-top: 40px;
+}
+
+.candidates {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.avatar {
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.2) rotate(-10deg);
+}
+
+.heart-gif {
+  width: 150px;
+  margin-top: 20px;
+  animation: bounce 1s infinite alternate;
+}
+
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px); 
+  -webkit-backdrop-filter: blur(5px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  pointer-events: auto;
+}
+
+.dialog-content {
+  background: #fff1f2;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+  position: relative;
+  z-index: 1001; 
+}
+
+.dialog-content p {
+  font-size: 18px;
+  color: #e11d48;
+  margin-bottom: 20px;
+}
+
+.dialog-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #f43f5e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dialog-content button:hover {
+  background: #e11d48;
+}
+
+.full-screen-gif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1000; 
+}
+
+.candidate-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #f43f5e; 
+  background: rgba(255, 241, 242, 0.8); 
+  border-radius: 10px; 
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s; 
+}
+
+.candidate-button:hover {
+  transform: scale(1.05);
+  background-color: #f43f5e; 
+  border-color: #e11d48; 
+
+.candidate-button p {
+  margin: 5px 0 0;
+  font-size: 16px;
+  color: #e11d48;
+}
+
+.candidate-button:hover p {
+  color: white; 
+}
+
+@keyframes bounce {
+  to {
+    transform: translateY(-20px);
+  }
+}
+ */
