@@ -2,7 +2,8 @@
 .App {
   text-align: center;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #ffe6e6, #ffcccc);
+  /* background: linear-gradient(to bottom, #ffe6e6, #ffcccc); */
+  /* background-color: #141313; */
   min-height: 100vh;
   padding: 50px;
   position: relative;
@@ -20,6 +21,7 @@ button {
   background-color: #ff6699;
   color: white;
   transition: all 0.3s ease;
+  margin-bottom: 30px;
 }
 
 button:hover {
@@ -116,6 +118,263 @@ button:hover {
   color: white;
 }
 
+/* ---------- Love Note Container (modal base) ---------- */
+.love-note-container {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: 500px;
+  margin: 20px auto;
+  position: relative;
+}
+
+/* ---------- Time container (sticky) ---------- */
+.time-container {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: 500px;
+  margin: 0 auto;
+  position: sticky;
+  bottom: 80px;      /* leave room above bottom spotify if present */
+  z-index: 1001;     /* below modal overlay */
+  margin-bottom: 40px;
+  backdrop-filter: blur(2px);
+}
+.time-container:hover {
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.5);
+  animation: pulse 1.5s infinite;
+  transform: translateY(-8px) scale(1.04);
+  transition: transform 0.18s cubic-bezier(.4,2,.3,1), box-shadow 0.18s;
+  /* background-color: #fff1f2; */
+  backdrop-filter: blur(8px);
+}
+
+/* ---------- Spotify container (sticky) ---------- */
+.spotify-container {
+  padding: 20px;
+  border-radius: 16px;
+  margin-top: 40px;
+  max-width: 500px;
+  margin: 20px auto 0 auto;
+  position: sticky;
+  bottom: 20px;      /* visible at bottom of viewport */
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  z-index: 1002;     /* still below modal overlay */
+  backdrop-filter: blur(2px);
+}
+.spotify-container:hover {
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.5);
+  animation: pulse 1.5s infinite;
+  transform: translateY(-4px) scale(1.02);
+  transition: transform 0.18s cubic-bezier(.4,2,.3,1), box-shadow 0.18s;
+  /* background-color: #fff1f2; */
+  backdrop-filter: blur(8px);
+}
+
+/* Spotify player framing */
+.spotify-player {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.spotify-player iframe {
+  width: 100%;
+  height: 380px; /* default height for desktop */
+  border: none;
+  border-radius: 12px;
+}
+
+.spotify-player h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #e11d48;
+}
+
+/* ---------- Dialog (modal) styles ---------- */
+.dialog-overlay {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;   /* VERY high so it always sits above sticky stuff */
+  padding: 20px;    /* small room on mobile */
+  pointer-events: auto;
+}
+
+/* the modal panel itself */
+.dialog-content {
+  background: #fff1f2;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(244, 63, 94, 0.4);
+  position: relative;
+  z-index: 10001;   /* ensure it's above the overlay */
+  transform: translateY(8px);
+  transition: transform 180ms ease, opacity 180ms ease;
+  opacity: 1;
+  outline: none;
+}
+
+/* dialog content text styling */
+.dialog-content p {
+  font-size: 18px;
+  color: #e11d48;
+  margin-bottom: 20px;
+}
+
+/* dialog buttons */
+.dialog-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #f43f5e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.12s ease;
+}
+
+.dialog-content button:hover {
+  background: #e11d48;
+  transform: translateY(-2px);
+}
+
+/* close button (circular top-right) */
+.dialog-content .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: linear-gradient(90deg, #ff6a8a, #ff4d7a);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* make sure textareas inside modal expand nicely */
+.dialog-content textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+  resize: vertical;
+  min-height: 120px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Birthday countdown clock ---------- */
+.birthday-countdown-clock {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  /* background: rgba(255, 106, 138, 0.5);  */
+  backdrop-filter: blur(8px);            /* blur effect */
+  -webkit-backdrop-filter: blur(8px);    /* Safari support */
+  padding: 10px 15px 2px 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  z-index: 9999;
+  max-width: 400px;
+  backdrop-filter: blur(2px);
+}
+.birthday-countdown-clock:hover {
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.5);
+  animation: pulse 1.5s infinite;
+  transform: translateY(-4px) scale(1.02);
+  transition: transform 0.18s cubic-bezier(.4,2,.3,1), box-shadow 0.18s;
+  /* background-color: #fff1f2; */
+  backdrop-filter: blur(8px);
+}
+
+
+.birthday-countdown-clock .clock-title {
+  font-size: 18px;
+  font-style: bold;
+  margin: 0 0 5px 0;
+  color: #cc185d;
+}
+
+.birthday-countdown-clock .clock-display {
+  background: #fff1f2;
+  padding: 5px 10px 2px 10px;
+  border-radius: 8px;
+  border: 2px solid #f43f5e;
+  backdrop-filter: blur(6px);
+}
+
+.birthday-countdown-clock .clock-display span {
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: #e11d48;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 600px) {
+  .App {
+    padding: 20px;
+    padding-bottom: 180px;
+  }
+
+  .time-container,
+  .spotify-container,
+  .spotify-player {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .spotify-player iframe {
+    height: 300px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .dialog-content {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .dialog-content h2 {
+    font-size: 18px;
+  }
+
+  .birthday-countdown-clock {
+    top: 10px;
+    left: 10px;
+    padding: 8px 12px;
+    max-width: 150px;
+  }
+
+  .birthday-countdown-clock .clock-title {
+    font-size: 12px;
+  }
+
+  .birthday-countdown-clock .clock-display span {
+    font-size: 14px;
+  }
+}
 /* ---------- Love Note Container (modal base) ---------- */
 /* keep this for semantic usage; dialog-content composes it */
 .love-note-container {

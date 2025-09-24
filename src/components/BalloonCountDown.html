@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        canvas {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            touch-action: none;
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+        .button-style {
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .button-style:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Container -->
+    <div class="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full flex flex-col items-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6">Balloon Maker</h1>
+        <canvas id="balloonCanvas" class="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] cursor-pointer"></canvas>
+        <div class="mt-6 w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <button id="clearButton" class="button-style bg-red-500 text-white font-bold py-3 px-6 rounded-full hover:bg-red-600 transition-all">Clear Balloons</button>
+            <button id="copyButton" class="button-style bg-blue-500 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-600 transition-all">Copy Image</button>
+        </div>
+    </div>
+
+    <!-- Message Box for Copy Confirmation -->
+    <div id="messageBox" class="hidden message-box">
+        <p class="text-lg font-semibold text-gray-800">Image copied to clipboard!</p>
+        <button onclick="document.getElementById('messageBox').classList.add('hidden')" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-full">OK</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('balloonCanvas');
+        const ctx = canvas.getContext('2d');
+        const clearButton = document.getElementById('clearButton');
+        const copyButton = document.getElementById('copyButton');
+        const messageBox = document.getElementById('messageBox');
+
+        let balloons = [];
+        let isDrawing = false;
+        let lastPosition = { x: 0, y: 0 };
+        const colorPalette = ["#FF4D4D", "#FFB84D", "#4D94FF", "#4DFF88", "#FF4DD0", "#FFD700", "#FF69B4", "#00BFFF", "#32CD32"];
+        const balloonRadius = 35; // A simple approximation for collision detection
+
+        // Set up canvas dimensions dynamically
+        const setCanvasSize = () => {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            drawAllBalloons();
+        };
+
+        window.addEventListener('resize', setCanvasSize);
+        window.onload = () => {
+            setCanvasSize();
+            animate();
+        };
+
+        // Function to draw a single balloon shape
+        const drawBalloon = (ctx, balloon) => {
+            ctx.save();
+            ctx.translate(balloon.x, balloon.y);
+            ctx.rotate(balloon.rotation);
+
+            // Balloon body
+            ctx.fillStyle = balloon.color;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 20, 35, 0, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Balloon knot
+            ctx.fillStyle = "#A9A9A9";
+            ctx.beginPath();
+            ctx.arc(0, 35, 4, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Balloon string with a wiggling effect
+            ctx.strokeStyle = "#555";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            
+            const startX = 0;
+            const startY = 35;
+            
+            const endX = 0;
+            const endY = 100;
+            
+            // Use a sine function to create a wiggling control point
+            const controlX = Math.sin(balloon.wigglePhase) * 15;
+            const controlY = (startY + endY) / 2 + Math.cos(balloon.wigglePhase * 0.5) * 5;
+
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+            ctx.stroke();
+
+            ctx.restore();
+        };
+
+        // Function to draw a user message on the canvas
+        const drawMessage = (message) => {
+            ctx.fillStyle = "#9ca3af";
+            ctx.font = "24px 'Inter', sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+        };
+
+        // Function to draw all balloons and the user message
+        const drawAllBalloons = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (balloons.length === 0) {
+                drawMessage("Click, tap, or drag to create balloons!");
+            }
+            balloons.forEach(balloon => {
+                drawBalloon(ctx, balloon);
+            });
+        };
+
+        const createBalloon = (x, y) => {
+            const rotation = (Math.random() - 0.5) * 0.2;
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            const vx = (Math.random() - 0.5) * 1.5;
+            const vy = -1 - Math.random();
+            const wigglePhase = Math.random() * Math.PI * 2; // Initial random phase for each string
+            balloons.push({ x: x, y: y, rotation: rotation, color: color, vx: vx, vy: vy, wigglePhase: wigglePhase });
+        };
+
+        const getTouchPosition = (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.touches[0].clientX - rect.left;
+            const y = event.touches[0].clientY - rect.top;
+            return { x, y };
+        };
+
+        // Animation loop
+        const animate = () => {
+            // Collision detection and resolution
+            for (let i = 0; i < balloons.length; i++) {
+                for (let j = i + 1; j < balloons.length; j++) {
+                    const b1 = balloons[i];
+                    const b2 = balloons[j];
+                    const dx = b1.x - b2.x;
+                    const dy = b1.y - b2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < balloonRadius * 2) {
+                        // Collision detected, resolve velocities
+                        const angle = Math.atan2(dy, dx);
+                        const sin = Math.sin(angle);
+                        const cos = Math.cos(angle);
+
+                        const v1RotatedX = b1.vx * cos + b1.vy * sin;
+                        const v1RotatedY = b1.vy * cos - b1.vx * sin;
+                        const v2RotatedX = b2.vx * cos + b2.vy * sin;
+                        const v2RotatedY = b2.vy * cos - b2.vx * sin;
+
+                        // Simple 1D collision resolution
+                        const vFinal1x = v2RotatedX;
+                        const vFinal2x = v1RotatedX;
+                        
+                        // Rotate velocities back to original coordinate system
+                        b1.vx = vFinal1x * cos - v1RotatedY * sin;
+                        b1.vy = v1RotatedY * cos + vFinal1x * sin;
+                        b2.vx = vFinal2x * cos - v2RotatedY * sin;
+                        b2.vy = v2RotatedY * cos + vFinal2x * sin;
+                    }
+                }
+            }
+
+            // Update balloon positions and remove those that are off-screen
+            balloons = balloons.filter(balloon => {
+                balloon.x += balloon.vx;
+                balloon.y += balloon.vy;
+                balloon.wigglePhase += 0.05; // Update the wiggle phase for the string
+
+                // Simple wall collision check
+                if (balloon.x < 0 || balloon.x > canvas.width) {
+                    balloon.vx *= -1;
+                }
+                
+                return balloon.y > -150; // Keep balloons until they are well off-screen
+            });
+
+            drawAllBalloons();
+            requestAnimationFrame(animate);
+        };
+
+        // Mouse and Touch Event Handlers
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            lastPosition = { x: e.offsetX, y: e.offsetY };
+            createBalloon(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const currentPosition = { x: e.offsetX, y: e.offsetY };
+            const distance = Math.sqrt(Math.pow(currentPosition.x - lastPosition.x, 2) + Math.pow(currentPosition.y - lastPosition.y, 2));
+            if (distance > 30) {
+                createBalloon(currentPosition.x, currentPosition.y);
+                lastPosition = currentPosition;
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDrawing = false;
+        });
+        
+        canvas.addEventListener('touchstart', (e) => {
+            isDrawing = true;
+            e.preventDefault();
+            const pos = getTouchPosition(e);
+            lastPosition = pos;
+            createBalloon(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const currentPosition = getTouchPosition(e);
+            const distance = Math.sqrt(Math.pow(currentPosition.x - lastPosition.x, 2) + Math.pow(currentPosition.y - lastPosition.y, 2));
+            if (distance > 30) {
+                createBalloon(currentPosition.x, currentPosition.y);
+                lastPosition = currentPosition;
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isDrawing = false;
+        });
+
+        // Button Event Handlers
+        clearButton.addEventListener('click', () => {
+            balloons = [];
+            drawAllBalloons();
+        });
+
+        copyButton.addEventListener('click', () => {
+            const messageWasVisible = balloons.length === 0;
+            if (messageWasVisible) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                balloons.forEach(balloon => {
+                    drawBalloon(ctx, balloon);
+                });
+            }
+
+            canvas.toBlob(blob => {
+                const item = new ClipboardItem({ "image/png": blob });
+                navigator.clipboard.write([item]).then(() => {
+                    showMessage("Image copied!");
+                }).catch(err => {
+                    console.error('Could not copy image: ', err);
+                    showMessage("Failed to copy image. Please try again.", true);
+                });
+                if (messageWasVisible) {
+                    drawMessage("Click, tap, or drag to create balloons!");
+                }
+            });
+        });
+
+        function showMessage(text, isError = false) {
+            const messageText = messageBox.querySelector('p');
+            messageText.textContent = text;
+            messageBox.style.backgroundColor = isError ? '#fee2e2' : '#fff';
+            messageText.style.color = isError ? '#b91c1c' : '#1f2937';
+            messageBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

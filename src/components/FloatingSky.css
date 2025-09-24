@@ -1,0 +1,269 @@
+/* FloatingSky styles
+.floating-sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+}
+
+.floating-item {
+  position: absolute;
+  transform-origin: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 999px;
+  transition: transform 180ms ease, filter 180ms;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
+  will-change: transform;
+  opacity: 0.95;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.floating-item:hover,
+.floating-item:focus {
+  transform: translateY(-6px) scale(1.12);
+  outline: none;
+  background: transparent;
+}
+
+.floating-item.star svg,
+.floating-item.moon svg {
+  fill: #ffffff;
+  stroke: #ffffff;
+  stroke-width: 0.1;
+  width: auto;
+  height: auto;
+  opacity: 0.95;
+}
+
+@keyframes floatY-1 { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } 100% { transform: translateY(0) rotate(0deg); } }
+@keyframes floatY-2 { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(-4deg); } 100% { transform: translateY(0) rotate(0deg); } }
+@keyframes floatY-3 { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(2deg); } 100% { transform: translateY(0) rotate(0deg); } }
+@keyframes floatY-4 { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(-3deg); } 100% { transform: translateY(0) rotate(0deg); } }
+
+.floating-item {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.floating-item:focus {
+  box-shadow: 0 0 0 6px rgba(56, 139, 253, 0.12);
+}
+
+.note-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.65));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+
+.note-modal {
+  background: linear-gradient(180deg, #fff, #fffefc);
+  padding: 20px 18px;
+  border-radius: 14px;
+  min-width: 280px;
+  max-width: 520px;
+  box-shadow: 0 20px 50px rgba(2,6,23,0.45);
+  position: relative;
+  text-align: center;
+}
+
+.note-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.note-modal h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.note-modal p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.note-btn {
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg,#ff7ab6,#ff5f9e);
+  color: #fff;
+  font-weight: 600;
+} */
+
+/* ---------- FloatingSky container ---------- */
+.floating-sky {
+  position: fixed; /* stay fixed on screen */
+  inset: 0;
+  pointer-events: none; /* only child buttons clickable */
+  z-index: 900;
+}
+
+/* ---------- Interactive stars and moon ---------- */
+.floating-item {
+  position: absolute;
+  transform-origin: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto; /* allow clicking */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 999px;
+  transition: transform 180ms ease, filter 180ms;
+  will-change: transform;
+  opacity: 0.95;
+  user-select: none;
+}
+
+.floating-item:hover,
+.floating-item:focus {
+  transform: translateY(-6px) scale(1.12);
+  outline: none;
+  background: transparent; /* no hover bg */
+}
+
+.floating-item.star svg {
+  width: 15px;
+  height: 15px;
+  fill: #fff;
+  stroke: #fff;
+  stroke-width: 0.1;
+  transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+.floating-item.star svg:hover {
+  /* fill: #ffdd57; golden on hover */
+  /* stroke: #ffdd57; */
+  animation: twinkle 1.5s ease-in-out 3; /* twinkle effect on hover can be infinite too */
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.floating-item.moon svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+  opacity: 0.95;
+}
+
+/* ---------- Floating animations ---------- */
+@keyframes floatY-1 { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+@keyframes floatY-2 { 0% { transform: translateY(0); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+@keyframes floatY-3 { 0% { transform: translateY(0); } 50% { transform: translateY(-14px); } 100% { transform: translateY(0); } }
+@keyframes floatY-4 { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+.floating-item {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* ---------- Note Modal ---------- */
+.note-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.65));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+.note-modal {
+  background: linear-gradient(180deg, #fff, #fffefc);
+  padding: 20px 18px;
+  border-radius: 14px;
+  min-width: 280px;
+  max-width: 520px;
+  box-shadow: 0 20px 50px rgba(2,6,23,0.45);
+  text-align: center;
+  position: relative;
+}
+.note-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+.note-modal h3 { margin: 0 0 8px 0; font-size: 20px; }
+.note-modal p { margin: 0; font-size: 16px; line-height: 1.4; color: #333; }
+.note-btn {
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg,#ff7ab6,#ff5f9e);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---------- Starfield canvas ---------- */
+.starfield-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #010118; /* dark night */
+}
+
+/* ---------- Twinkling dots effect ---------- */
+.starfield-dot {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.2; transform: scale(0.5); }
+}
+
+/* ---------- Comets ---------- */
+.comet {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+.comet-tail {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  border-radius: 1px;
+  transform-origin: left center;
+  opacity: 0.6;
+}

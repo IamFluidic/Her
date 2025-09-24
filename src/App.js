@@ -5,9 +5,12 @@ import QualitiesGame from "./components/QualitiesGame";
 import BestPerson from "./components/BestPerson";
 import Proposal from "./components/Proposal";
 import LoveNote from "./components/LoveNote";
-import Confetti from "react-confetti";
+//import Confetti from "react-confetti";
 import SpotifyPlayer from "./components/SpotifyPlayer"; // Import the new Spotify component
 //import TimeTogether from "./components/TimeTogether";
+import BirthdayCountdown from "./components/BirthdayCountdown";
+import FloatingSky from "./components/FloatingSky";
+import StarBackground from "./components/StarBackground";
 import "./App.css";
 
 function App() {
@@ -90,90 +93,93 @@ function App() {
     };
   }, [/* no deps - runs on mount */]);
 
-    const handleShare = () => {
-      if (navigator.share) {
-        navigator.share({
-          title: "Time Together",
-          text: `We've been together for ${timeTogether}! ❤️`,
-          url: window.location.href,
-        }).catch((error) => console.error("Share failed:", error));
-      } else {
-        alert(`Share this: We've been together for ${timeTogether}! ❤️\n${window.location.href}`);
-      }
-    };
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Time Together",
+        text: `We've been together for ${timeTogether}! ❤️`,
+        url: window.location.href,
+      }).catch((error) => console.error("Share failed:", error));
+    } else {
+      alert(`Share this: We've been together for ${timeTogether}! ❤️\n${window.location.href}`);
+    }
+  };
 
-    return (
-      <div className="App">
-        <h1 className="fade-in">❤️ A Surprise for You ❤️</h1>
-        <div className="step">
-          {step === 1 && <NameChallenge nextStep={nextStep} showDialog={showDialog} setShowDialog={setShowDialog} />}
-          {step === 2 && <QualitiesGame nextStep={nextStep} />}
-          {step === 3 && <BestPerson nextStep={nextStep} />}
-          {step === 4 && <Proposal resetStep={resetStep} />}
-        </div>
+  return (
+    <div className="App">
+      <StarBackground /> 
+      <FloatingSky />
+      <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>❤️ A Surprise for You ❤️</h1>
+      <div className="step">
+        {step === 1 && <BirthdayCountdown />}
+        {step === 1 && <NameChallenge nextStep={nextStep} showDialog={showDialog} setShowDialog={setShowDialog} />}
+        {step === 2 && <QualitiesGame nextStep={nextStep} />}
+        {step === 3 && <BestPerson nextStep={nextStep} />}
+        {step === 4 && <Proposal resetStep={resetStep} />}
+      </div>
 
-        <h2 className="fade-in" style={{ marginTop: "40px" }}>
-          {/* P.S. Check the console for a little surprise 😉 */}
-        </h2>
-        {step === 1 && !showDialog && (
-          <>
+      <h2 className="fade-in" style={{ marginTop: "40px" }}>
+        {/* P.S. Check the console for a little surprise 😉 */}
+      </h2>
+      {step === 1 && !showDialog && (
+        <>
+          <button
+            className="fade-in"
+            style={{ marginTop: "20px" }}
+            onClick={() => setShowLoveNote(true)}
+          >
+            Write a Love Note 💌
+          </button>
+
+        </>
+      )}
+      {showLoveNote && <LoveNote onClose={() => setShowLoveNote(false)} />}
+
+      {step === 1 && (
+        <>
+          <div className="time-container">
+            <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>
+              ❤️ Time Together ❤️<br />
+            </h1>
+            <br />
+            <h2 className="fade-in" style={{ margin: "0", color: "#3a8debff" }}>
+              {timeTogether}
+            </h2>
             <button
               className="fade-in"
-              style={{ marginTop: "20px" }}
-              onClick={() => setShowLoveNote(true)}
+              style={{ marginTop: "10px" }}
+              onClick={handleShare}
             >
-              Write a Love Note 💌
+              📤 Share
             </button>
-
-          </>
-        )}
-        {showLoveNote && <LoveNote onClose={() => setShowLoveNote(false)} />}
-
-        {step === 1 && (
-          <>
-            <div className="time-container">
-              <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>
-                ❤️ Time Together ❤️<br />
-              </h1>
-              <br />
-              <h2 className="fade-in" style={{ margin: "0", color: "#3a8debff" }}>
-                {timeTogether}
-              </h2>
-              <button
-                className="fade-in"
-                style={{ marginTop: "10px" }}
-                onClick={handleShare}
-              >
-                📤 Share
-              </button>
-            </div>
-
-            <Confetti
-              width={window.innerWidth}
-              height={window.innerHeight}
-              numberOfPieces={200}
-              recycle={true}
-              colors={['#ff69b4', '#ff1493', '#ff69b4']}
-              emoji={['❤️']}
-              gravity={0.02}
-            />
-          </>
-        )}
-        {step === 1 && (
-          <div className="spotify-container" ref={spotifyRef}>
-            <SpotifyPlayer />
           </div>
-        )}
+
+          {/* <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            numberOfPieces={200}
+            recycle={true}
+            colors={['#ff69b4', '#ff1493', '#ff69b4']}
+            emoji={['❤️']}
+            gravity={0.02}
+          /> */}
+        </>
+      )}
+      {step === 1 && (
+        <div className="spotify-container" ref={spotifyRef}>
+          <SpotifyPlayer />
+        </div>
+      )}
 
 
-        {/* <div className="time-container"> */}
-        {/* <p className="fade-in" style={{ margin: "0", color: "#e11d48" }}>
+      {/* <div className="time-container"> */}
+      {/* <p className="fade-in" style={{ margin: "0", color: "#e11d48" }}>
           Time Together: {timeTogether}
         </p> */}
-        {/* <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>❤️ Time Together ❤️<br></br> </h1> {timeTogether}
+      {/* <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>❤️ Time Together ❤️<br></br> </h1> {timeTogether}
       </div> */}
 
-        {/* <div className="time-container">
+      {/* <div className="time-container">
         <h1 className="fade-in" style={{ margin: "0", color: "#e11d48" }}>
           ❤️ Time Together ❤️<br />
         </h1>
@@ -190,11 +196,11 @@ function App() {
         </button>
       </div> */}
 
-        <audio autoPlay loop>
-          <source src="/bg-music.mp3" type="audio/mpeg" />
-        </audio>
-      </div>
-    );
-  }
+      <audio autoPlay loop>
+        <source src="/bg-music.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+  );
+}
 
 export default App;

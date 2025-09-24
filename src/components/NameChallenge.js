@@ -1,35 +1,3 @@
-// import React, { useState } from "react";
-
-// const NameChallenge = ({ nextStep }) => {
-//   const [name, setName] = useState("");
-//   const [message, setMessage] = useState("");
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (name.trim().toLowerCase() === "dipshi karki") {
-//       nextStep();
-//     } else {
-//       setMessage("Hmm... not quite right! Try again :)");
-//     }
-//   };
-
-//   return (
-//     <div className="step fade-in">
-//       <h2>Enter my full name to continue:</h2>
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           type="text"
-//           value={name}
-//           onChange={(e) => setName(e.target.value)}
-//         />
-//         <button type="submit">Submit</button>
-//       </form>
-//       <p>{message}</p>
-//     </div>
-//   );
-// };
-
-// export default NameChallenge;
 import React, { useState } from "react";
 
 const NameChallenge = ({ nextStep, setShowDialog, showDialog }) => {
@@ -54,7 +22,7 @@ const NameChallenge = ({ nextStep, setShowDialog, showDialog }) => {
   
   return (
     <div className="step fade-in">
-      <h2>Enter my full name to continue bebu:</h2>
+      <h2 style={{ margin: "0", color: "#e11d48" }}>Enter my full name to continue bebu:</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
