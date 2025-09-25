@@ -139,7 +139,7 @@
   position: absolute;
   bottom: 0;
   font-size: 2.5em;
-  animation: flyUpB 4s ease-in forwards;
+  animation: flyUpB 0.5s ease-in forwards;
 }
 
 /* Random positions */
