@@ -1,8 +1,6 @@
 Love Website
 A romantic React application with interactive challenges leading to a heartfelt proposal.
-
-The main branch contains original code, which has a lot of features missing. 
-"For-testing" branch includes the added feature.
+The main branch contains original code, which has a lot of features missing. "For-testing" branch includes the added feature.
 
 Getting Started
 
