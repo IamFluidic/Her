@@ -62,6 +62,29 @@ button:hover {
   transform: scale(1.2) rotate(-10deg);
 }
 
+.message-person {
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 25px;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  max-width: min(275px, 90%);
+  margin: 0 auto 40px;          /* centers it + space below */
+  position: sticky;
+  bottom: 80px;                 /* space above bottom (e.g. Spotify bar) */
+  z-index: 1001;                /* above normal content */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px); /* Safari support */
+  overflow-wrap: anywhere;      /* prevents long text overflow */
+  background-color: rgba(255, 241, 242, 0.8); /* light background for readability */
+}
+
+.message-person p {
+  margin: 0;
+  color: #e11d48;
+  font-size: 18px;   /* or 1.125rem for accessibility */
+  line-height: 1.4;
+}
+
 /* ---------- Heart GIF ---------- */
 .heart-gif {
   width: 150px;

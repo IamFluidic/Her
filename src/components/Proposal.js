@@ -64,7 +64,7 @@ const Proposal = ({ resetStep }) => {
   return (
     <div className="step fade-in" style={{ position: "relative", height: "300px", background: "transparent", zIndex: 1000 }}>
       {showConfetti && <Confetti />}
-      <h2>Will you be my Valentine? ❤️</h2>
+      <h2 style={{color: "#e11d48" }}>Will you be my Valentine? ❤️</h2>
 
       {answer === "" && (
         <>
@@ -86,7 +86,7 @@ const Proposal = ({ resetStep }) => {
       {answer === "No" && <p className="fade-in">You actually clicked "No"? 😅</p>}
       {answer === "Yes" && (
         <div style={{ position: "relative", zIndex: 1002, pointerEvents: "auto" }}>
-          <p className="fade-in">
+          <p className="fade-in" style={{color: "#e11d48", fontSize: 18}}>
             Yay! I love you! 💖 <br />
             🎉 You made it through the challenges!
           </p>

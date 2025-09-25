@@ -46,7 +46,7 @@ const QualitiesGame = ({ nextStep }) => {
 
   return (
     <div className="step fade-in">
-      <h2>Select the qualities you like the most:</h2>
+      <h2 style={{color: "#e11d48" }}>Select the qualities you like the most:</h2>
       {qualities.map((q) => (
         <button key={q} onClick={() => handleClick(q)}>
           {q}

@@ -50,7 +50,7 @@ const BestPerson = ({ nextStep }) => {
     if (person === "Me") {
       setMessage("Kati maya garchey ni ❤️");
       setTimeout(nextStep, 1000);
-    } 
+    }
     else if (person === "Friend") {
       setMessage("Jauu timi date aarkeii saga 😜");
     }
@@ -61,7 +61,7 @@ const BestPerson = ({ nextStep }) => {
 
   return (
     <div className="step fade-in">
-      <h2>Who is the best person?</h2>
+      <h2 style={{ color: "#e11d48" }}>Who is the best person?</h2>
       <div className="candidates">
         {candidates.map((c) => (
           <button key={c.name} onClick={() => handleClick(c.name)} className="candidate-button">
@@ -70,7 +70,11 @@ const BestPerson = ({ nextStep }) => {
           </button>
         ))}
       </div>
-      <p>{message}</p>
+      <div className="message-person">
+        <p>{message}</p>
+      </div>
+
+
     </div>
   );
 };
